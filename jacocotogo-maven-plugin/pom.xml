@@ -78,4 +78,42 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>remote</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>deployment</id>
+                    <name>Internal Releases</name>
+                    <url>http://localhost:8081/nexus/content/repositories/releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>deployment</id>
+                    <name>Internal Releases</name>
+                    <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>            
+        </profile>
+        <profile>
+            <id>buildserver</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>deployment</id>
+                    <name>Internal Releases</name>
+                    <url>http://localhost:8080/nexus/content/repositories/releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>deployment</id>
+                    <name>Internal Releases</name>
+                    <url>http://localhost:8080/nexus/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>            
+        </profile>
+    </profiles>
 </project>
