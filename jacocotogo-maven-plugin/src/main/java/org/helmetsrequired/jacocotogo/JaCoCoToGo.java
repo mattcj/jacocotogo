@@ -1,4 +1,4 @@
-package com.sensus.maven.plugins.jacocotogo;
+package org.helmetsrequired.jacocotogo;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

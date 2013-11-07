@@ -1,5 +1,5 @@
 
-package com.sensus.maven.plugins.jacocotogo;
+package org.helmetsrequired.jacocotogo;
 
 /**
  * An error resulting from an unexpected failure, server unreachable, file not writeable, etc....

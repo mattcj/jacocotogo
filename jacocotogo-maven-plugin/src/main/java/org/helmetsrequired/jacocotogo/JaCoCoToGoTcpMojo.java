@@ -1,5 +1,5 @@
 
-package com.sensus.maven.plugins.jacocotogo;
+package org.helmetsrequired.jacocotogo;
 
 import java.io.File;
 import org.apache.maven.plugin.AbstractMojo;
@@ -13,26 +13,23 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Plugin to allow fetching jacoco data from remote servers where 
- *  the 'org.jacoco:type=Runtime MBean' is exposed via JMX
+ *  the jacoco javaagent is running with output=tcpserver
  * @author Matt Jenkins
  */
-@Mojo(name = "jmx")
-public class JaCoCoToGoJmxMojo extends AbstractMojo {    
+//@Mojo(name = "tcp") // TODO enable this goal once implemented
+public class JaCoCoToGoTcpMojo extends AbstractMojo {    
     /**
-     * The serviceURL of the JMX server i.e. 'service:jmx:rmi:///jndi/rmi://myserver.mydomain.com:&lt;portNo&gt;/jmxrmi'
+     * The hostname where the jacoco javaagent is running
      */
-    @Parameter(required = true, property = "jacocotogo.serviceURL")
-    private String serviceURL;
+    @Parameter(required = true, property = "jacocotogo.hostname")
+    private String hostname;
+    
     /**
-     * The username for the JMX server if authentication is enabled
+     * The port where the tcpserver is listening
      */
-    @Parameter(property = "jacocotogo.username")
-    private String username;
-    /**
-     * The password for the JMX server if authentication is enabled
-     */
-    @Parameter(property = "jacocotogo.password")
-    private String password;
+    @Parameter(required = true, property = "jacocotogo.port")
+    int port;
+    
     /**
      * The file to write with the fetched jacoco data
      */
@@ -45,7 +42,7 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
     private boolean resetAfterFetch;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {                                
+    public void execute() throws MojoExecutionException, MojoFailureException {                        
         File file = new File(outputFile);
         File directory = file.getParentFile();
         if (!directory.exists()) {
@@ -54,24 +51,20 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
         }
         
         try {            
-            JaCoCoToGo.fetchJaCoCoDataOverJmx(serviceURL, username, password, file, resetAfterFetch);
+            JaCoCoToGo.fetchJaCoCoDataOverTcp(hostname, port, file, resetAfterFetch);
         } catch (JaCoCoToGoException ex) {
             throw new MojoExecutionException("Exception while running plugin", ex);
         } catch (JaCoCoToGoValidationException ex) {
             throw new MojoFailureException("Exception while running plugin", ex);
         }        
     }
-    
-    public void setServiceURL(String serviceURL) {
-        this.serviceURL = serviceURL;
-    }
-    
-    public void setUsername(String username) {
-        this.username = username;
-    }        
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public void setOutputFile(String outputFile) {
@@ -80,6 +73,8 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
 
     public void setResetAfterFetch(boolean resetAfterFetch) {
         this.resetAfterFetch = resetAfterFetch;
-    }        
+    }
+    
+    
     
 }

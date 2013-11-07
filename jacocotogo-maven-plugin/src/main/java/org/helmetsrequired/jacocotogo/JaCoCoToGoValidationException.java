@@ -1,5 +1,5 @@
 
-package com.sensus.maven.plugins.jacocotogo;
+package org.helmetsrequired.jacocotogo;
 
 /**
  * An exception which represents an error resulting from user input
