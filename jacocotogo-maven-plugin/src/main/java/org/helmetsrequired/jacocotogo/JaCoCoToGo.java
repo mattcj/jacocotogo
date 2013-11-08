@@ -1,11 +1,13 @@
 package org.helmetsrequired.jacocotogo;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,9 @@ import javax.management.ReflectionException;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.runtime.RemoteControlReader;
+import org.jacoco.core.runtime.RemoteControlWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +32,13 @@ import org.slf4j.LoggerFactory;
  */
 public class JaCoCoToGo {
 
-    private static final Logger logger = LoggerFactory.getLogger(JaCoCoToGo.class);    
+    private static final Logger logger = LoggerFactory.getLogger(JaCoCoToGo.class);
     private static final String JMX_CREDENTIALS_KEY = "jmx.remote.credentials";
     private static final int MAX_PORT = (int) (Math.pow(2, 16) - 1);
     private static final String JACOCO_OBJECT_NAME_STRING = "org.jacoco:type=Runtime";
     private static final String JACOCO_FETCH_METHOD_NAME = "getExecutionData";
 
-    public static final void fetchJaCoCoDataOverJmx(String serviceUrl, String username, String password, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {        
+    public static final void fetchJaCoCoDataOverJmx(String serviceUrl, String username, String password, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {
         // construct JMX Service URL        
         JMXServiceURL url = constructJMXServiceURL(serviceUrl);
 
@@ -43,13 +48,13 @@ public class JaCoCoToGo {
         // save to file
         saveExecutionData(executionData, outputFile);
     }
-    
+
     public static final void fetchJaCoCoDataOverTcp(String hostname, int port, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {
-        checkHostname(hostname);
+        InetAddress hostAddress = checkHostname(hostname);
         checkPort(port);
 
         // fetch the execution data
-        byte[] executionData = getExecutionDataViaJaCoCoTCPServer(hostname, port, resetAfterFetch);
+        byte[] executionData = getExecutionDataViaJaCoCoTCPServer(hostAddress, port, resetAfterFetch);
 
         // save to file
         saveExecutionData(executionData, outputFile);
@@ -84,7 +89,7 @@ public class JaCoCoToGo {
         } catch (MalformedObjectNameException ex) {
             throw new JaCoCoToGoValidationException("Unable to create ObjectName for JaCoCo MBean", ex);
         }
-    }        
+    }
 
     private static void saveExecutionData(byte[] executionData, File outputFile) throws JaCoCoToGoException {
         logger.info("Saving JaCoCo execution data to file: '{}'", outputFile.getAbsolutePath());
@@ -118,16 +123,16 @@ public class JaCoCoToGo {
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param url
      * @param username
      * @param password
      * @param resetAfterFetch
      * @return
      * @throws JaCoCoToGoException
-     * @throws JaCoCoToGoValidationException 
+     * @throws JaCoCoToGoValidationException
      */
     private static byte[] getExecutionDataViaJMX(JMXServiceURL url, String username, String password, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {
         try {
@@ -157,10 +162,10 @@ public class JaCoCoToGo {
         }
     }
 
-    private static void checkHostname(String hostname) throws JaCoCoToGoValidationException {
+    private static InetAddress checkHostname(String hostname) throws JaCoCoToGoValidationException {
         try {
             logger.debug("Verifying that hostname: '{}' can be resolved.", hostname);
-            InetAddress.getByName(hostname);
+            return InetAddress.getByName(hostname);
         } catch (UnknownHostException ex) {
             throw new JaCoCoToGoValidationException("Unable to resolve hostname: '" + hostname + "'", ex);
         }
@@ -173,14 +178,50 @@ public class JaCoCoToGo {
     }
 
     /**
-     * 
+     *
      * @param hostname
      * @param port
-     * @param resetAfterFetch whether JaCoCo coverage data should be reset after fetch
+     * @param resetAfterFetch whether JaCoCo coverage data should be reset after
+     * fetch
      * @return the jacoco coverage data
      */
-    private static byte[] getExecutionDataViaJaCoCoTCPServer(String hostname, int port, boolean resetAfterFetch) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    private static byte[] getExecutionDataViaJaCoCoTCPServer(InetAddress address, int port, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
+        ByteArrayOutputStream output = null;
+        Socket socket = null;
+        try {
+            // 1. Open socket connection
+            socket = new Socket(address, port);
+            logger.info("Connecting to {}", socket.getRemoteSocketAddress());
+            RemoteControlWriter remoteWriter = new RemoteControlWriter(socket.getOutputStream());
+            RemoteControlReader remoteReader = new RemoteControlReader(socket.getInputStream());
 
+            output = new ByteArrayOutputStream();
+            ExecutionDataWriter outputWriter = new ExecutionDataWriter(output);
+            remoteReader.setSessionInfoVisitor(outputWriter);
+            remoteReader.setExecutionDataVisitor(outputWriter);
+
+            // 3. Request dump
+            remoteWriter.visitDumpCommand(true, resetAfterFetch);
+            remoteReader.read();            
+            
+            return output.toByteArray();
+        } catch (final IOException e) {
+            throw new RuntimeException("Unable to dump coverage data", e);
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    // bummer
+                }
+            }
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException ex) {
+                    // bummer
+                }
+            }
+        }
+    }
 }

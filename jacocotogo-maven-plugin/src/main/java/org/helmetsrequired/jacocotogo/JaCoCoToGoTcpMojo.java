@@ -16,7 +16,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  *  the jacoco javaagent is running with output=tcpserver
  * @author Matt Jenkins
  */
-//@Mojo(name = "tcp") // TODO enable this goal once implemented
+@Mojo(name = "tcp")
 public class JaCoCoToGoTcpMojo extends AbstractMojo {    
     /**
      * The hostname where the jacoco javaagent is running
