@@ -8,7 +8,31 @@
     <packaging>maven-plugin</packaging>
     <name>jacocotogo-maven-plugin</name>
     <description>A maven plugin to fetch JaCoCo data from remote servers</description>
-    <properties>                
+    <url>http://jacocotogo.helmetsrequired.org</url>
+    
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>git@github.com:mattcj/jacocotogo.git</connection>
+        <developerConnection>git@github.com:mattcj/jacocotogo.git</developerConnection>
+        <url>https://github.com/mattcj/jacocotogo</url>
+    </scm>
+    
+    <developers>
+        <developer>
+            <id>mattcj</id>
+            <name>Matt Jenkins</name>
+            <email>matt@helmetsrequired.org</email>
+        </developer>
+    </developers>
+     
+   <properties>                
         <!-- encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
@@ -104,7 +128,6 @@
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
-<!--                        <phase>verify</phase>-->
                         <goals>
                             <goal>jar</goal>
                         </goals>                        
