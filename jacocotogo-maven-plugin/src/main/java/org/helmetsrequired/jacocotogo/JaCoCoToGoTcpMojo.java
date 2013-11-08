@@ -12,8 +12,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Plugin to allow fetching jacoco data from remote servers where 
+ * Plugin to allow fetching jacoco data from remote servers where
  *  the jacoco javaagent is running with output=tcpserver
+ *
  * @author Matt Jenkins
  */
 @Mojo(name = "tcp")
@@ -41,6 +42,7 @@ public class JaCoCoToGoTcpMojo extends AbstractMojo {
     @Parameter(property = "jacocotogo.resetAfterFetch", defaultValue = "true")
     private boolean resetAfterFetch;
 
+    /** {@inheritDoc} */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {                        
         File file = new File(outputFile);
@@ -59,18 +61,38 @@ public class JaCoCoToGoTcpMojo extends AbstractMojo {
         }        
     }
 
+    /**
+     * <p>Setter for the field <code>hostname</code>.</p>
+     *
+     * @param hostname a {@link java.lang.String} object.
+     */
     public void setHostname(String hostname) {
         this.hostname = hostname;
     }
 
+    /**
+     * <p>Setter for the field <code>port</code>.</p>
+     *
+     * @param port a int.
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * <p>Setter for the field <code>outputFile</code>.</p>
+     *
+     * @param outputFile a {@link java.lang.String} object.
+     */
     public void setOutputFile(String outputFile) {
         this.outputFile = outputFile;
     }
 
+    /**
+     * <p>Setter for the field <code>resetAfterFetch</code>.</p>
+     *
+     * @param resetAfterFetch a boolean.
+     */
     public void setResetAfterFetch(boolean resetAfterFetch) {
         this.resetAfterFetch = resetAfterFetch;
     }

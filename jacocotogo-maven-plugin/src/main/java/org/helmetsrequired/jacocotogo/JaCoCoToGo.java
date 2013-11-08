@@ -27,9 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>JaCoCoToGo class.</p>
  *
  * @author Matt Jenkins
- */
+  */
 public class JaCoCoToGo {
 
     private static final Logger logger = LoggerFactory.getLogger(JaCoCoToGo.class);
@@ -38,7 +39,17 @@ public class JaCoCoToGo {
     private static final String JACOCO_OBJECT_NAME_STRING = "org.jacoco:type=Runtime";
     private static final String JACOCO_FETCH_METHOD_NAME = "getExecutionData";
 
-    public static final void fetchJaCoCoDataOverJmx(String serviceUrl, String username, String password, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {
+    /**
+     * <p>fetchJaCoCoDataOverJmx.</p>
+     *
+     * @param serviceUrl a {@link java.lang.String} object.
+     * @param username a {@link java.lang.String} object.
+     * @param password a {@link java.lang.String} object.
+     * @param outputFile a {@link java.io.File} object.
+     * @param resetAfterFetch a boolean.
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if any.
+     */
+    public static final void fetchJaCoCoDataOverJmx(String serviceUrl, String username, String password, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         // construct JMX Service URL        
         JMXServiceURL url = constructJMXServiceURL(serviceUrl);
 
@@ -49,7 +60,17 @@ public class JaCoCoToGo {
         saveExecutionData(executionData, outputFile);
     }
 
-    public static final void fetchJaCoCoDataOverTcp(String hostname, int port, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {
+    /**
+     * <p>fetchJaCoCoDataOverTcp.</p>
+     *
+     * @param hostname a {@link java.lang.String} object.
+     * @param port a int.
+     * @param outputFile a {@link java.io.File} object.
+     * @param resetAfterFetch a boolean.
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoException if any.
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if any.
+     */
+    public static final void fetchJaCoCoDataOverTcp(String hostname, int port, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         InetAddress hostAddress = checkHostname(hostname);
         checkPort(port);
 
@@ -91,7 +112,7 @@ public class JaCoCoToGo {
         }
     }
 
-    private static void saveExecutionData(byte[] executionData, File outputFile) throws JaCoCoToGoException {
+    private static void saveExecutionData(byte[] executionData, File outputFile) {
         logger.info("Saving JaCoCo execution data to file: '{}'", outputFile.getAbsolutePath());
         if (executionData == null) {
             logger.warn("executionData is null, nothing to save");
@@ -130,11 +151,11 @@ public class JaCoCoToGo {
      * @param username
      * @param password
      * @param resetAfterFetch
-     * @return
+     * @return byte array containing the jacoco execution data
      * @throws JaCoCoToGoException
      * @throws JaCoCoToGoValidationException
      */
-    private static byte[] getExecutionDataViaJMX(JMXServiceURL url, String username, String password, boolean resetAfterFetch) throws JaCoCoToGoException, JaCoCoToGoValidationException {
+    private static byte[] getExecutionDataViaJMX(JMXServiceURL url, String username, String password, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         try {
             Map<String, Object> envMap = new HashMap<String, Object>();
             populateEnvironmentMapWithCredentials(envMap, username, password);

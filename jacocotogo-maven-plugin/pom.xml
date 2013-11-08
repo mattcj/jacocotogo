@@ -20,6 +20,7 @@
         <jacoco-version>0.6.3.201306030806</jacoco-version>
         <maven-plugins-version>3.2</maven-plugins-version>
         <maven-source-plugin-version>2.2.1</maven-source-plugin-version>
+        <maven-javadoc-plugin-version>2.9.1</maven-javadoc-plugin-version>
         <maven-plugins-api-version>3.0.5</maven-plugins-api-version>
     </properties>
     
@@ -93,6 +94,20 @@
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+<!--                        <phase>verify</phase>-->
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>                        
                     </execution>
                 </executions>
             </plugin>

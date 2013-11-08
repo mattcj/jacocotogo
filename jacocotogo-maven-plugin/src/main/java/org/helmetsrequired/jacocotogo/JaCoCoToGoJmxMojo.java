@@ -12,8 +12,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Plugin to allow fetching jacoco data from remote servers where 
+ * Plugin to allow fetching jacoco data from remote servers where
  *  the 'org.jacoco:type=Runtime MBean' is exposed via JMX
+ *
  * @author Matt Jenkins
  */
 @Mojo(name = "jmx")
@@ -44,6 +45,7 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
     @Parameter(property = "jacocotogo.resetAfterFetch", defaultValue = "true")
     private boolean resetAfterFetch;
 
+    /** {@inheritDoc} */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {                                
         File file = new File(outputFile);
@@ -62,22 +64,47 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
         }        
     }
     
+    /**
+     * <p>Setter for the field <code>serviceURL</code>.</p>
+     *
+     * @param serviceURL a {@link java.lang.String} object.
+     */
     public void setServiceURL(String serviceURL) {
         this.serviceURL = serviceURL;
     }
     
+    /**
+     * <p>Setter for the field <code>username</code>.</p>
+     *
+     * @param username a {@link java.lang.String} object.
+     */
     public void setUsername(String username) {
         this.username = username;
     }        
 
+    /**
+     * <p>Setter for the field <code>password</code>.</p>
+     *
+     * @param password a {@link java.lang.String} object.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * <p>Setter for the field <code>outputFile</code>.</p>
+     *
+     * @param outputFile a {@link java.lang.String} object.
+     */
     public void setOutputFile(String outputFile) {
         this.outputFile = outputFile;
     }
 
+    /**
+     * <p>Setter for the field <code>resetAfterFetch</code>.</p>
+     *
+     * @param resetAfterFetch a boolean.
+     */
     public void setResetAfterFetch(boolean resetAfterFetch) {
         this.resetAfterFetch = resetAfterFetch;
     }        
