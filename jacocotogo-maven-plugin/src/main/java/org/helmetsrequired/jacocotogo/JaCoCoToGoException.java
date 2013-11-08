@@ -26,7 +26,7 @@ package org.helmetsrequired.jacocotogo;
 /**
  * An error resulting from an unexpected failure, server unreachable, file not writeable, etc....
  *
- * @author Matt Jenkins
+ * @author Matthew C. Jenkins
  * @version project.version
  */
 public class JaCoCoToGoException extends RuntimeException {

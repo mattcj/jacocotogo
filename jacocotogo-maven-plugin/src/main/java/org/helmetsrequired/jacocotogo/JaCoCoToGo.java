@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 /**
  * <p>JaCoCoToGo class.</p>
  *
- * @author Matt Jenkins
+ * @author Matthew C. Jenkins
   */
 public class JaCoCoToGo {
 

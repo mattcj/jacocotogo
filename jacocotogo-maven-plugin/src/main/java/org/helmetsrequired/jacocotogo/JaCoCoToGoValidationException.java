@@ -26,7 +26,7 @@ package org.helmetsrequired.jacocotogo;
 /**
  * An exception which represents an error resulting from user input
  *
- * @author Matt Jenkins 
+ * @author Matthew C. Jenkins 
  */
 public class JaCoCoToGoValidationException extends Exception {
 

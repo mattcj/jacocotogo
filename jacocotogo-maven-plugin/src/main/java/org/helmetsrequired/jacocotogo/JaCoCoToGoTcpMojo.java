@@ -37,7 +37,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * Plugin to allow fetching jacoco data from remote servers where
  *  the jacoco javaagent is running with output=tcpserver
  *
- * @author Matt Jenkins
+ * @author Matthew C. Jenkins
  */
 @Mojo(name = "tcp")
 public class JaCoCoToGoTcpMojo extends AbstractMojo {    
