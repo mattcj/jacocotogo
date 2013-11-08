@@ -8,7 +8,7 @@
     <packaging>maven-plugin</packaging>
     <name>jacocotogo-maven-plugin</name>
     <description>A maven plugin to fetch JaCoCo data from remote servers</description>
-    <url>http://jacocotogo.helmetsrequired.org</url>
+    <url>https://github.com/mattcj/jacocotogo</url>
     
     <licenses>
         <license>
@@ -29,6 +29,7 @@
             <id>mattcj</id>
             <name>Matt Jenkins</name>
             <email>matt@helmetsrequired.org</email>
+            <url>https://github.com/mattcj</url>
         </developer>
     </developers>
      
