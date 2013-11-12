@@ -37,6 +37,12 @@
     <packaging>maven-plugin</packaging>
     <name>jacocotogo-maven-plugin</name>
     <description>A maven plugin to fetch JaCoCo data from remote servers</description>
+    
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/mattcj/jacocotogo/issues</url>       
+    </issueManagement>
+    
     <inceptionYear>2013</inceptionYear>    
 
     <url>https://github.com/mattcj/jacocotogo</url>
@@ -49,8 +55,8 @@
     </licenses>
     
     <scm>
-        <connection>git@github.com:mattcj/jacocotogo.git</connection>
-        <developerConnection>git@github.com:mattcj/jacocotogo.git</developerConnection>
+        <connection>scm:git:https://github.com/mattcj/jacocotogo.git</connection>
+        <developerConnection>scm:git:https://github.com/mattcj/jacocotogo.git</developerConnection>
         <url>https://github.com/mattcj/jacocotogo</url>
     </scm>
     
