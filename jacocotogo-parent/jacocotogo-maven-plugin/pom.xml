@@ -28,64 +28,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <groupId>org.helmetsrequired</groupId>
+        <artifactId>jacocotogo-parent</artifactId>
+        <version>0.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.helmetsrequired</groupId>
-    <artifactId>jacocotogo-maven-plugin</artifactId>
-    <version>0.0.0-SNAPSHOT</version>
+    <artifactId>jacocotogo-maven-plugin</artifactId>    
     <packaging>maven-plugin</packaging>
     <name>jacocotogo-maven-plugin</name>
-    <description>A maven plugin to fetch JaCoCo data from remote servers</description>
-    
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/mattcj/jacocotogo/issues</url>       
-    </issueManagement>
-    
-    <inceptionYear>2013</inceptionYear>    
-
-    <url>https://github.com/mattcj/jacocotogo</url>
-    
-    <licenses>
-        <license>
-            <name>The MIT License (MIT)</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>      
-            <distribution>repo</distribution>            
-        </license>
-    </licenses>
-    
-    <scm>
-        <connection>scm:git:git://github.com/mattcj/jacocotogo.git</connection>
-        <developerConnection>scm:git:git@github.com:mattcj/jacocotogo.git</developerConnection>
-        <url>https://github.com/mattcj/jacocotogo</url>
-    </scm>
-    
-    <developers>
-        <developer>
-            <id>mattcj</id>
-            <name>Matt Jenkins</name>
-            <email>matt@helmetsrequired.org</email>
-            <url>https://github.com/mattcj</url>
-        </developer>
-    </developers>
-     
-    <properties>                
-        <!-- encoding -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
-        <!-- software versions -->        
-        <log4j-version>1.2.16</log4j-version>
-        <slf4j-version>1.6.1</slf4j-version>        
-        <surefire-version>2.10</surefire-version>
-        <failsafe-version>2.10</failsafe-version>        
-        <jacoco-version>0.6.3.201306030806</jacoco-version>
-        <maven-plugins-version>3.2</maven-plugins-version>
-        <maven-source-plugin-version>2.2.1</maven-source-plugin-version>
-        <maven-javadoc-plugin-version>2.9.1</maven-javadoc-plugin-version>
-        <maven-plugins-api-version>3.0.5</maven-plugins-api-version>
-    </properties>
+    <description>A maven plugin to fetch JaCoCo data from remote servers</description>        
     
     <dependencies>
         <dependency>
@@ -172,34 +122,8 @@
             </plugin>                    
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin-version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
-    <profiles>
-        <profile>
-            <id>remote</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <distributionManagement>
-                <repository>
-                    <id>deployment</id>
-                    <name>Internal Releases</name>
-                    <url>http://localhost:8081/nexus/content/repositories/releases/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>deployment</id>
-                    <name>Internal Releases</name>
-                    <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>            
-        </profile>
+    
+    <profiles>       
         <profile>
             <id>buildserver</id>
             <activation>
