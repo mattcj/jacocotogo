@@ -33,11 +33,11 @@
         <version>7</version>
     </parent>
     <groupId>org.helmetsrequired</groupId>
-    <artifactId>jacocotogo-parent</artifactId>
-    <version>0.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>jacocotogo-parent</name>
-    <description>parent project for jacocotogo</description>
+    <artifactId>jacocotogo-maven-plugin</artifactId>    
+    <version>0.0.0-SNAPSHOT</version>    
+    <packaging>maven-plugin</packaging>
+    <name>jacocotogo-maven-plugin</name>
+    <description>A maven plugin to fetch JaCoCo data from remote servers</description>
     
     <issueManagement>
         <system>GitHub Issues</system>
@@ -88,10 +88,6 @@
         <maven-project-info-reports-plugin-version>2.7</maven-project-info-reports-plugin-version>
     </properties>
     
-    <modules>
-        <module>jacocotogo-maven-plugin</module>
-    </modules>
-    
     <distributionManagement>
         <site>
             <id>dummyserver.fake</id>
@@ -99,9 +95,90 @@
         </site>
     </distributionManagement>
     
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>            
+            <version>${maven-plugins-api-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-tools-annotations</artifactId>
+            <version>${maven-plugins-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.core</artifactId>
+            <version>${jacoco-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j-version}</version>
+        </dependency>
+    </dependencies>
+    
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven-plugins-version}</version>                
+                    <configuration>
+                        <goalPrefix>jacocotogo</goalPrefix>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-descriptor</id>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                            <phase>process-classes</phase>
+                        </execution>
+                        <execution>
+                            <id>help-descriptor</id>
+                            <goals>
+                                <goal>helpmojo</goal>
+                            </goals>
+                            <phase>process-classes</phase>
+                        </execution>
+                    </executions>                
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <header>com/mycila/maven/plugin/license/templates/MIT.txt</header>
+                        <properties>
+                            <owner>Matthew C. Jenkins</owner>
+                            <year>${project.inceptionYear}</year>
+                            <email>matt@helmetsrequired.org</email>
+                        </properties>
+                        <excludes>                        
+                            <exclude>src/test/resources/**</exclude>
+                            <exclude>src/main/resources/**</exclude>
+                        </excludes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
@@ -130,17 +207,36 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin-version}</version>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate-javadoc</id>
-                        <inherited>false</inherited>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
+                <version>${maven-javadoc-plugin-version}</version>                
             </plugin>
         </plugins>
-    </reporting>    
-</project>  
+    </reporting>        
+    
+    <profiles>       
+        <profile>
+            <id>buildserver</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <build>   
+                <plugins>         
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin-version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>                        
+            </build>
+        </profile>
+    </profiles>
+</project>
