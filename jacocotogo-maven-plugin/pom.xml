@@ -39,6 +39,10 @@
     <name>jacocotogo-maven-plugin</name>
     <description>A maven plugin to fetch JaCoCo data from remote servers</description>
     
+    <organization>
+        <name>helmetsrequired.org</name>
+    </organization>
+    
     <issueManagement>
         <system>GitHub Issues</system>
         <url>https://github.com/mattcj/jacocotogo/issues</url>       
@@ -51,7 +55,7 @@
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>https://github.com/mattcj/jacocotogo/blob/master/LICENSE</url>      
+            <url>https://raw.github.com/mattcj/jacocotogo/master/LICENSE</url>      
             <distribution>repo</distribution>            
         </license>
     </licenses>
@@ -80,7 +84,8 @@
         <slf4j-version>1.6.1</slf4j-version>        
         <surefire-version>2.10</surefire-version>
         <failsafe-version>2.10</failsafe-version>        
-        <jacoco-version>0.6.3.201306030806</jacoco-version>        
+        <jacoco-version>0.6.3.201306030806</jacoco-version>
+        <maven-plugin-plugin-version>3.2</maven-plugin-plugin-version>   
     </properties>
     
     <distributionManagement>
@@ -113,114 +118,96 @@
         </dependency>
     </dependencies>
     
-    <build>        
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.2</version>                
-                    <configuration>
-                        <goalPrefix>jacocotogo</goalPrefix>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-descriptor</id>
-                            <goals>
-                                <goal>descriptor</goal>
-                            </goals>
-                            <phase>process-classes</phase>
-                        </execution>
-                        <execution>
-                            <id>help-descriptor</id>
-                            <goals>
-                                <goal>helpmojo</goal>
-                            </goals>
-                            <phase>process-classes</phase>
-                        </execution>
-                    </executions>                
-                </plugin>
-                <plugin>
-                    <groupId>com.mycila</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>2.5</version>
-                    <configuration>
-                        <header>com/mycila/maven/plugin/license/templates/MIT.txt</header>
-                        <properties>
-                            <owner>Matthew C. Jenkins</owner>
-                            <year>${project.inceptionYear}</year>
-                            <email>matt@helmetsrequired.org</email>
-                        </properties>
-                        <excludes>                        
-                            <exclude>src/test/resources/**</exclude>
-                            <exclude>src/main/resources/**</exclude>
-                        </excludes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>                                
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>                
-                </plugin>                                                                   
-            </plugins>
-        </pluginManagement>
+    <build>                
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
+                <version>2.5</version>        
+                <configuration>
+                    <header>com/mycila/maven/plugin/license/templates/MIT.txt</header>
+                    <properties>
+                        <owner>Matthew C. Jenkins</owner>
+                        <year>${project.inceptionYear}</year>
+                        <email>matt@helmetsrequired.org</email>
+                    </properties>
+                    <excludes>                        
+                        <exclude>src/test/resources/**</exclude>
+                        <exclude>src/main/resources/**</exclude>
+                        <exclude>src/site/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>${maven-plugin-plugin-version}</version>                
+                <configuration>
+                    <goalPrefix>jacocotogo</goalPrefix>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-descriptor</id>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                    <execution>
+                        <id>help-descriptor</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                </executions>                
             </plugin>
         </plugins>
-    </build>             
+    </build>
     
-    <profiles>       
-        <profile>
-            <id>buildserver</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-
-            <build>   
-                <plugins>         
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>                        
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-project-info-reports-plugin</artifactId>                        
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>                        
-                    </plugin>                  
-                </plugins>                                    
-            </build>
-        </profile>
-    </profiles>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>                        
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>${maven-plugin-plugin-version}</version>                                
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>                       
+            </plugin>            
+        </plugins>
+    </reporting>         
 </project>
