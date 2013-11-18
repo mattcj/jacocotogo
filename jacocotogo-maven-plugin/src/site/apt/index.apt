@@ -1,10 +1,10 @@
- ------
- Introduction
- ------
- Author
- ------
- YYYY-MM-DD
- ------
+    ------
+    Introduction
+    ------
+    Author
+    ------
+    YYYY-MM-DD
+    ------
 
 
 JaCoCoToGo Maven Plugin
@@ -34,6 +34,6 @@ JaCoCoToGo Maven Plugin
   To provide you with better understanding of some usages of the Plugin Name,
   you can take a look into the following examples:
 
-  * {{{examples/example-one.html}Example Description One}}
+  * {{{./examples/example1.html}Example Description One}}
 
-  * {{{examples/example-two.html}Example Description Two}}
+  * {{{./examples/example2.html}Example Description Two}}

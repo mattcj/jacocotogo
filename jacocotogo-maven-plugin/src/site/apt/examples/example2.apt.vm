@@ -1,0 +1,56 @@
+    ------
+    Example - Access via TCP
+    ------
+    Author
+    ------
+    YYYY-MM-DD
+    ------    
+
+Example - Access via TCP
+
+    This example illustrates the step required to use the jacocotogo maven plugin to retrieve coverage information over TCP.
+
+* JaCoCo Java Agent Configuration
+
+    The JVM which you wish to obtain coverage metrics from must be instrumented at runtime via the JaCoCo Java Agent.
+Additionally the <output> option must be set to <tcpserver> to expose expose the JaCoCo agent via TCP.
+
++-------------------------------------------------------------------------------
+    -javaagent:[yourpath/]jacocoagent.jar=output=tcpserver,address=*,port=6300
++-------------------------------------------------------------------------------
+
+    Further Instructions for configuring the JaCoCo java agent are available at: {{http://www.eclemma.org/jacoco/trunk/doc/agent.html}}.
+
+* Plugin Configuration
+
+    To retrieve coverage metrics from a remote JVM after integration tests have completed:
+
++-------------------------------------------------------------------------------
+...
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>get_integration_test_coverage</id>
+                        <phase>post-integration-test</phase>                        
+                        <goals>
+                            <goal>tcp</goal>
+                        </goals>
+                        <configuration>
+                            <hostname>myserver.mydomain.com</hostname>
+                            <port>6300</port>
+                            <outputFile>mypath/jacoco.exec</outputFile>
+                        </configuration?
+                    </execution>
+                </executions>
+            </plugin>
+            ...
+        </plugins>
+        ...
+    </build>
+    ...
++-------------------------------------------------------------------------------
