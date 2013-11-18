@@ -19,8 +19,7 @@ JaCoCoToGo Maven Plugin
 
 * Usage
 
-  General instructions on how to use the Plugin Name can be found on the {{{usage.html}usage page}}. Some more
-  specific use cases are described in the examples given below. 
+  Specific use cases are described in the examples given below. 
 
   If you feel like the plugin is missing a feature or has a defect, you can fill a feature request or bug report in our
   {{{./issue-tracking.html}issue tracker}}. When creating a new issue, please provide a comprehensive description of your
@@ -34,6 +33,6 @@ JaCoCoToGo Maven Plugin
   To provide you with better understanding of some usages of the Plugin Name,
   you can take a look into the following examples:
 
-  * {{{./examples/example1.html}Example Description One}}
+  * {{{./examples/example1.html}Access via JMX}}
 
-  * {{{./examples/example2.html}Example Description Two}}
+  * {{{./examples/example2.html}Access via TCP}}
