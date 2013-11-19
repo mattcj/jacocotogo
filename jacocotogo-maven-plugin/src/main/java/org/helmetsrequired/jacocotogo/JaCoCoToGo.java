@@ -57,12 +57,12 @@ public class JaCoCoToGo {
     /**
      * <p>fetchJaCoCoDataOverJmx.</p>
      *
-     * @param serviceUrl a {@link java.lang.String} object.
-     * @param username a {@link java.lang.String} object.
-     * @param password a {@link java.lang.String} object.
-     * @param outputFile a {@link java.io.File} object.
-     * @param resetAfterFetch a boolean.
-     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if any.
+     * @param serviceUrl a {@link java.lang.String} object representing a {@link javax.management.remote.JMXServiceURL}.
+     * @param username the username to use for the JMX connection if authentication is enabled.
+     * @param password the password to use for the JMX connection if authentication is enabled.
+     * @param outputFile a {@link java.io.File} where the retrieved jacoco data should be written.
+     * @param resetAfterFetch whether the jacoco data on the remote system should be reset after fetching.
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if there is a problem with the supplied arguments
      */
     public static final void fetchJaCoCoDataOverJmx(String serviceUrl, String username, String password, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         // construct JMX Service URL        
@@ -78,12 +78,11 @@ public class JaCoCoToGo {
     /**
      * <p>fetchJaCoCoDataOverTcp.</p>
      *
-     * @param hostname a {@link java.lang.String} object.
-     * @param port a int.
-     * @param outputFile a {@link java.io.File} object.
-     * @param resetAfterFetch a boolean.
-     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoException if any.
-     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if any.
+     * @param hostname the hostname where the remote jvm is running
+     * @param port the port where the JaCoCo java agent TCP Server is listening
+     * @param outputFile a {@link java.io.File} where the retrieved jacoco data should be written.
+     * @param resetAfterFetch whether the jacoco data on the remote system should be reset after fetching.     
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if there is a problem with the supplied arguments.
      */
     public static final void fetchJaCoCoDataOverTcp(String hostname, int port, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         InetAddress hostAddress = checkHostname(hostname);
@@ -162,13 +161,12 @@ public class JaCoCoToGo {
 
     /**
      *
-     * @param url
-     * @param username
-     * @param password
-     * @param resetAfterFetch
-     * @return byte array containing the jacoco execution data
-     * @throws JaCoCoToGoException
-     * @throws JaCoCoToGoValidationException
+     * @param url a {@link javax.management.remote.JMXServiceURL} where the JMX service is running
+     * @param username the username to use for the JMX connection if authentication is enabled.
+     * @param password the password to use for the JMX connection if authentication is enabled.
+     * @param resetAfterFetch whether the JaCoCo data on the remote system should be reset after fetching.
+     * @return byte array containing the JaCoCo execution data     
+     * @throws JaCoCoToGoValidationException if there is a problem with the supplied arguments.
      */
     private static byte[] getExecutionDataViaJMX(JMXServiceURL url, String username, String password, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         try {
@@ -179,7 +177,7 @@ public class JaCoCoToGo {
             MBeanServerConnection connection = connector.getMBeanServerConnection();
             ObjectName objectName = constructJaCoCoObjectName();
             logger.info("Invoking method: '{}' on ObjectName: {}", JACOCO_FETCH_METHOD_NAME, objectName);
-            Object result = connection.invoke(objectName, JACOCO_FETCH_METHOD_NAME, new Object[]{true}, new String[]{boolean.class.getName()});
+            Object result = connection.invoke(objectName, JACOCO_FETCH_METHOD_NAME, new Object[]{resetAfterFetch}, new String[]{boolean.class.getName()});
             try {
                 byte[] data = (byte[]) result;
                 logger.debug("{} bytes of JaCoCo execution data received", data.length);
@@ -215,11 +213,11 @@ public class JaCoCoToGo {
 
     /**
      *
-     * @param hostname
-     * @param port
+     * @param hostname the hostname where the remote jvm is running.
+     * @param port the port where the JaCoCo Java Agent TCP Server is listening.
      * @param resetAfterFetch whether JaCoCo coverage data should be reset after
      * fetch
-     * @return the jacoco coverage data
+     * @return a byte array containing the JaCoCo execution data.
      */
     private static byte[] getExecutionDataViaJaCoCoTCPServer(InetAddress address, int port, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         ByteArrayOutputStream output = null;
