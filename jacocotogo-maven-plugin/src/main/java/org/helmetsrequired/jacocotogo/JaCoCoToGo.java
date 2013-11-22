@@ -42,10 +42,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>JaCoCoToGo class.</p>
+ * <p>
+ * JaCoCoToGo class.</p>
  *
  * @author Matthew C. Jenkins
-  */
+ */
 public class JaCoCoToGo {
 
     private static final Logger logger = LoggerFactory.getLogger(JaCoCoToGo.class);
@@ -55,14 +56,21 @@ public class JaCoCoToGo {
     private static final String JACOCO_FETCH_METHOD_NAME = "getExecutionData";
 
     /**
-     * <p>fetchJaCoCoDataOverJmx.</p>
+     * <p>
+     * fetchJaCoCoDataOverJmx.</p>
      *
-     * @param serviceUrl a {@link java.lang.String} object representing a {@link javax.management.remote.JMXServiceURL}.
-     * @param username the username to use for the JMX connection if authentication is enabled.
-     * @param password the password to use for the JMX connection if authentication is enabled.
-     * @param outputFile a {@link java.io.File} where the retrieved jacoco data should be written.
-     * @param resetAfterFetch whether the jacoco data on the remote system should be reset after fetching.
-     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if there is a problem with the supplied arguments
+     * @param serviceUrl a {@link java.lang.String} object representing a
+     * {@link javax.management.remote.JMXServiceURL}.
+     * @param username the username to use for the JMX connection if
+     * authentication is enabled.
+     * @param password the password to use for the JMX connection if
+     * authentication is enabled.
+     * @param outputFile a {@link java.io.File} where the retrieved jacoco data
+     * should be written.
+     * @param resetAfterFetch whether the jacoco data on the remote system
+     * should be reset after fetching.
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if
+     * there is a problem with the supplied arguments
      */
     public static final void fetchJaCoCoDataOverJmx(String serviceUrl, String username, String password, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         // construct JMX Service URL        
@@ -76,13 +84,17 @@ public class JaCoCoToGo {
     }
 
     /**
-     * <p>fetchJaCoCoDataOverTcp.</p>
+     * <p>
+     * fetchJaCoCoDataOverTcp.</p>
      *
      * @param hostname the hostname where the remote jvm is running
      * @param port the port where the JaCoCo java agent TCP Server is listening
-     * @param outputFile a {@link java.io.File} where the retrieved jacoco data should be written.
-     * @param resetAfterFetch whether the jacoco data on the remote system should be reset after fetching.     
-     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if there is a problem with the supplied arguments.
+     * @param outputFile a {@link java.io.File} where the retrieved jacoco data
+     * should be written.
+     * @param resetAfterFetch whether the jacoco data on the remote system
+     * should be reset after fetching.
+     * @throws org.helmetsrequired.jacocotogo.JaCoCoToGoValidationException if
+     * there is a problem with the supplied arguments.
      */
     public static final void fetchJaCoCoDataOverTcp(String hostname, int port, File outputFile, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         InetAddress hostAddress = checkHostname(hostname);
@@ -161,12 +173,17 @@ public class JaCoCoToGo {
 
     /**
      *
-     * @param url a {@link javax.management.remote.JMXServiceURL} where the JMX service is running
-     * @param username the username to use for the JMX connection if authentication is enabled.
-     * @param password the password to use for the JMX connection if authentication is enabled.
-     * @param resetAfterFetch whether the JaCoCo data on the remote system should be reset after fetching.
-     * @return byte array containing the JaCoCo execution data     
-     * @throws JaCoCoToGoValidationException if there is a problem with the supplied arguments.
+     * @param url a {@link javax.management.remote.JMXServiceURL} where the JMX
+     * service is running
+     * @param username the username to use for the JMX connection if
+     * authentication is enabled.
+     * @param password the password to use for the JMX connection if
+     * authentication is enabled.
+     * @param resetAfterFetch whether the JaCoCo data on the remote system
+     * should be reset after fetching.
+     * @return byte array containing the JaCoCo execution data
+     * @throws JaCoCoToGoValidationException if there is a problem with the
+     * supplied arguments.
      */
     private static byte[] getExecutionDataViaJMX(JMXServiceURL url, String username, String password, boolean resetAfterFetch) throws JaCoCoToGoValidationException {
         try {
@@ -234,11 +251,18 @@ public class JaCoCoToGo {
             remoteReader.setSessionInfoVisitor(outputWriter);
             remoteReader.setExecutionDataVisitor(outputWriter);
 
-            // 3. Request dump
+            // 2. Request dump
             remoteWriter.visitDumpCommand(true, resetAfterFetch);
-            remoteReader.read();            
-            
-            return output.toByteArray();
+            remoteReader.read();
+
+            // 3. verify valid JaCoCo execution data
+            byte[] outputBytes = output.toByteArray();
+            if (outputBytes.length <= 5) {
+                throw new JaCoCoToGoException("No JaCoCo execution data received.");
+            }
+
+            // 4. Return data
+            return outputBytes;
         } catch (final IOException e) {
             throw new RuntimeException("Unable to dump coverage data", e);
         } finally {
