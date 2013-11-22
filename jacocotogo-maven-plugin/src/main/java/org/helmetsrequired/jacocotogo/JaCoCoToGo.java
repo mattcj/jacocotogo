@@ -264,7 +264,7 @@ public class JaCoCoToGo {
             // 4. Return data
             return outputBytes;
         } catch (final IOException e) {
-            throw new RuntimeException("Unable to dump coverage data", e);
+            throw new JaCoCoToGoException("Unable to dump coverage data", e);
         } finally {
             if (socket != null) {
                 try {

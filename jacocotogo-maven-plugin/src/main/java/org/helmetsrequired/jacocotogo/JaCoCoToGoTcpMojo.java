@@ -32,7 +32,12 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @author Matthew C. Jenkins
  */
 @Mojo(name = "tcp")
-public class JaCoCoToGoTcpMojo extends AbstractMojo {    
+public class JaCoCoToGoTcpMojo extends AbstractMojo {
+    /**
+     * Whether the build should be failed if JaCoCo execution data can not be fetched
+     */
+    @Parameter(required = true, property = "jacocotogo.failOnError", defaultValue="false")
+    private boolean failOnError;
     /**
      * The hostname where the jacoco javaagent is running
      */
@@ -69,10 +74,25 @@ public class JaCoCoToGoTcpMojo extends AbstractMojo {
         try {            
             JaCoCoToGo.fetchJaCoCoDataOverTcp(hostname, port, file, resetAfterFetch);
         } catch (JaCoCoToGoException ex) {
-            throw new MojoExecutionException("Exception while running plugin", ex);
+            getLog().warn("Exception while running plugin.  failOnError = " + failOnError + ". " + ex.getMessage());
+            if (failOnError) {
+                throw new MojoExecutionException("Exception while running plugin", ex);
+            }
         } catch (JaCoCoToGoValidationException ex) {
-            throw new MojoFailureException("Exception while running plugin", ex);
-        }        
+            getLog().warn("Exception while running plugin.  failOnError = " + failOnError + ". " + ex.getMessage());
+            if (failOnError) {
+                throw new MojoFailureException("Exception while running plugin", ex);
+            }
+        }       
+    }
+    
+    /**
+     * <p>Setter for the field <code>failOnError</code>.</p>
+     * 
+     * @param failOnError whether build should be failed if an error occurs
+     */
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
     }
 
     /**
