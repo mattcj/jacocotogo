@@ -223,7 +223,7 @@
         </plugins>
     </reporting>
     
-    <profiles>
+    <profiles>        
         <profile>
             <id>signRelease</id>
             <build>
