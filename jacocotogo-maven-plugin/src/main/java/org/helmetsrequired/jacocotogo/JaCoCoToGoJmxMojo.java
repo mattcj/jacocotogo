@@ -67,8 +67,9 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
     /** {@inheritDoc} */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {                                
-        File file = new File(outputFile);
-        File directory = file.getParentFile();
+        File file = new File(outputFile);        
+        File directory = file.getAbsoluteFile().getParentFile();        
+        
         if (!directory.exists()) {
             getLog().debug("creating directory: " + directory.getAbsolutePath());
             directory.mkdirs();
