@@ -18,14 +18,18 @@ package org.helmetsrequired.jacocotogo;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
@@ -35,6 +39,7 @@ import javax.management.ReflectionException;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
@@ -140,6 +145,16 @@ public class JaCoCoToGo {
 
     private static void saveExecutionData(byte[] executionData, File outputFile) {
         logger.info("Saving JaCoCo execution data to file: '{}'", outputFile.getAbsolutePath());
+        if (outputFile.exists()) {
+            throw new JaCoCoToGoException("outputFile '" + outputFile.getAbsolutePath() + "' already exists.");
+        }
+        File outputFileDir = outputFile.getAbsoluteFile().getParentFile();
+        if (!outputFileDir.exists()) {
+            if (!outputFileDir.mkdirs()) {
+                throw new IllegalArgumentException("Failed to create directory: '" + outputFileDir.getAbsolutePath() + "'");
+            }
+        }
+
         if (executionData == null) {
             logger.warn("executionData is null, nothing to save");
             return;
@@ -226,7 +241,7 @@ public class JaCoCoToGo {
         if (port < 1 || port > MAX_PORT) {
             throw new JaCoCoToGoValidationException("Invalid port: '" + port + "'");
         }
-    }
+    }    
 
     /**
      *
@@ -276,6 +291,59 @@ public class JaCoCoToGo {
             if (output != null) {
                 try {
                     output.close();
+                } catch (IOException ex) {
+                    // bummer
+                }
+            }
+        }
+    }
+    
+    public static void mergeJaCoCoData(List<File> inputFiles, File mergeFile) {
+        // check the mergeFile
+        if (mergeFile == null) {
+            throw new IllegalArgumentException("mergeFile is null");
+        }
+        if (mergeFile.exists()) {
+            throw new JaCoCoToGoException("File already exists: '" + mergeFile.getAbsolutePath());
+        }
+        File mergeFileDir = mergeFile.getAbsoluteFile().getParentFile();
+        if (! mergeFileDir.exists()) {
+            if (!mergeFileDir.mkdirs()) {
+                throw new JaCoCoToGoException("Error creating directory: '" + mergeFileDir.getAbsolutePath() + "'");
+            }
+        }
+        
+        // load data from each file
+        ExecFileLoader execFileLoader = new ExecFileLoader();
+        for (File inputFile : inputFiles) {
+            try {
+                execFileLoader.load(inputFile);
+            } catch (IOException ex) {
+                throw new JaCoCoToGoException("Error loading data from file: '" + inputFile.getAbsolutePath() + "'");
+            }
+        }
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
+        ExecutionDataWriter executionDataWriter = null;
+        try {
+            fos = new FileOutputStream(mergeFile);
+            bos = new BufferedOutputStream(fos);
+            executionDataWriter = new ExecutionDataWriter(bos);
+            execFileLoader.getSessionInfoStore().accept(executionDataWriter);
+            execFileLoader.getExecutionDataStore().accept(executionDataWriter);
+        } catch (IOException ex) {
+            throw new JaCoCoToGoException("Error saving merged execution data to file: " + mergeFile.getAbsolutePath(), ex);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException ex) {
+                    // bummer
+                }
+            }
+            if (bos != null) {
+                try {
+                    bos.close();
                 } catch (IOException ex) {
                     // bummer
                 }
