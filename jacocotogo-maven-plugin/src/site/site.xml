@@ -7,7 +7,7 @@
                 <item name="help" href="./help-mojo.html" />
                 <item name="jmx" href="./jmx-mojo.html" />
                 <item name="tcp" href="./tcp-mojo.html"/>
-                <item name="tcp" href="./batch-mojo.html"/>
+                <item name="batch" href="./batch-mojo.html"/>
             </item>
             <!--<item name="FAQ" href="faq.html"/>-->
             <item name="Project Info" href="./project-info.html" />
