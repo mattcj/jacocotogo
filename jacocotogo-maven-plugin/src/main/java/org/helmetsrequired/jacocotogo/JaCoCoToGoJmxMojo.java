@@ -30,6 +30,8 @@ import org.apache.maven.plugins.annotations.Parameter;
  *  the 'org.jacoco:type=Runtime MBean' is exposed via JMX
  *
  * @author Matthew C. Jenkins
+ * 
+ * @since 1.0
  */
 @Mojo(name = "jmx")
 public class JaCoCoToGoJmxMojo extends AbstractMojo {

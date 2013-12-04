@@ -27,6 +27,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  *
  * @author Matthew C. Jenkins
+ * @since 1.1
  */
 @Mojo(name = "batch")
 public class JaCoCoToGoBatchMojo extends AbstractMojo {

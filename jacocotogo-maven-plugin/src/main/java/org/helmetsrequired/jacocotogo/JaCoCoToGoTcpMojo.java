@@ -30,6 +30,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  *  the jacoco javaagent is running with output=tcpserver
  *
  * @author Matthew C. Jenkins
+ * @ since 1.0
  */
 @Mojo(name = "tcp")
 public class JaCoCoToGoTcpMojo extends AbstractMojo {
