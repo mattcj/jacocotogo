@@ -295,6 +295,15 @@ public class JaCoCoToGo {
         }
     }
     
+    /**
+     * <p>
+     * mergeJaCoCoData.</p>
+     * 
+     * Combines the specified inputFiles into a single merged file.
+     * 
+     * @param inputFiles a {@link java.util.List<java.io.File>} of JaCoCo execution data files to merge.
+     * @param mergeFile the {@link java.io.File} where merged data should be written
+     */
     public static void mergeJaCoCoData(List<File> inputFiles, File mergeFile) {
         // check the mergeFile
         if (mergeFile == null) {
@@ -321,7 +330,7 @@ public class JaCoCoToGo {
         }
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
-        ExecutionDataWriter executionDataWriter = null;
+        ExecutionDataWriter executionDataWriter;
         try {
             fos = new FileOutputStream(mergeFile);
             bos = new BufferedOutputStream(fos);

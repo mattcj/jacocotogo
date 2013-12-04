@@ -22,25 +22,68 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Represents a single source for JaCoCo execution data.
+ * 
  * @author Matthew C. Jenkins
  */
-public class FetchOrder {
-
-    private final static Logger logger = LoggerFactory.getLogger(FetchOrder.class);
+public class Source {
+    private final static Logger logger = LoggerFactory.getLogger(Source.class);
     private static final int MAX_PORT = (int) (Math.pow(2, 16) - 1);
     private static final String DEFAULT_JMX_URL_PREFIX = "service:jmx:rmi:///jndi/rmi://";
     private static final String DEFAULT_JMX_URL_SUFFIX = "/jmxrmi";
-    private FetchType fetchType;
+    
+    /**
+     * a {@link org.helmetsrequired.jacocotogo.SourceType} representing whether
+     * this source is accessed via TCP or JMX
+     */
+    private SourceType sourceType;
+    
+    /**
+     * Input parameter for the type of the source, should be either jmx or tcp.
+     * Not necessary if serviceURL is specified.
+     */
     private String type;
+    
+    /**
+     * the hostname of the remote system.  Not necessary if serviceURL is specified.
+     */
     private String hostname;
+    
+    /**
+     * the port to use for accessing the remote system.
+     * Not necessary if serviceURL is specified.
+     */
     private int port;
+    
+    /**
+     * The file where the jacoco execution data should be written.
+     */
     private File outputFile;
+    
+    /**
+     * A username for jmx access if authentication is required by the remote system.
+     */
     private String username;
+    
+    /**
+     * A password for jmx access if authentication is required by the remote system.
+     */
     private String password;
+    
+    /**
+     * The serviceURL representing where the jacoco data can be retrieved.  For JMX access
+     * see {@link javax.management.remote.JMXServiceURL} for format details.  For
+     * TCP access the serviceURL should take the format: 'tcp://myhost.mydomain.com:port'
+     * 
+     * If the serviceURL is specified it takes precedence over the type, hostname, and port parameters.
+     */
     private String serviceURL;
+    
+    /**
+     * whether to reset the coverage statistics after fetching the jacoco data
+     */
     private boolean resetAfterFetch = true;
-
+    
     public void setType(String type) {
         this.type = type;
     }
@@ -49,8 +92,8 @@ public class FetchOrder {
         return type;
     }
 
-    public FetchType getFetchType() {
-        return fetchType;
+    public SourceType getSourceType() {
+        return sourceType;
     }        
 
     public String getHostname() {
@@ -116,16 +159,16 @@ public class FetchOrder {
                 throw new IllegalArgumentException("Parameter 'type' is missing.  It is required if 'serviceURL' is not set.");
             }
             try {                
-                fetchType = FetchType.valueOf(type.toUpperCase());
+                sourceType = SourceType.valueOf(type.toUpperCase());
             } catch (IllegalArgumentException ex) {                            
-                throw new IllegalArgumentException("Parameter 'type' has invalid value: '" + type + "' valid values are: '" + FetchType.values().toString(), ex);
+                throw new IllegalArgumentException("Parameter 'type' has invalid value: '" + type + "' valid values are: '" + SourceType.values().toString(), ex);
             }
             if (hostname == null) {
                 throw new IllegalArgumentException("Parameter 'hostname' is missing.  It is required if 'serviceURL' is not set.");
             }
             validateHostname();
             validatePort();
-            if (fetchType == FetchType.JMX) {
+            if (sourceType == SourceType.JMX) {
                 constructJMXServiceURL();
             }
         } else {
@@ -177,7 +220,7 @@ public class FetchOrder {
         if (tokens.length > 3) {
             throw new IllegalArgumentException("Invalid 'serviceURL'.  For tcp 'serviceURL' should be in the format of: 'tcp://<hostname>:<portno>'.");
         }
-        fetchType = FetchType.TCP;
+        sourceType = SourceType.TCP;
         if (!tokens[1].startsWith("//")) {
             throw new IllegalArgumentException("Invalid 'serviceURL'.  For tcp 'serviceURL' should be in the format of: 'tcp://<hostname>:<portno>'.");
         }
@@ -188,12 +231,14 @@ public class FetchOrder {
     }
 
     private void parseJMXServiceURL(String[] tokens) {
-        fetchType = FetchType.JMX;
+        sourceType = SourceType.JMX;
     }
 
     @Override
     public String toString() {
-        return "FetchOrder{" + "fetchType=" + fetchType + ", type=" + type + ", hostname=" + hostname + ", port=" + port + ", outputFile=" + outputFile + ", username=" + username + ", password=" + (password == null ? null : "*****")  + ", serviceURL=" + serviceURL + ", resetAfterFetch=" + resetAfterFetch + '}';
+        return "Source{" + "sourceType=" + sourceType + ", type=" + type + ", hostname=" + hostname + ", port=" + port + ", outputFile=" + outputFile + ", username=" + username + ", password=" + (password == null ? null : "*****" ) + ", serviceURL=" + serviceURL + ", resetAfterFetch=" + resetAfterFetch + '}';
     }
+
+    
         
 }

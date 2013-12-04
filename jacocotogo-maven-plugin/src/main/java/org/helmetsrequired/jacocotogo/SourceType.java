@@ -15,11 +15,10 @@
  */
 package org.helmetsrequired.jacocotogo;
 
-/**
- *
+/** 
  * @author Matthew C. Jenkins
  */
-public enum FetchType {
+public enum SourceType {
     TCP, JMX;
     
 }

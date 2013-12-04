@@ -25,7 +25,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- *
+ * Retrieves JaCoCo execution data from multiple sources, and optionally,
+ * merge the results.
+ * 
  * @author Matthew C. Jenkins
  * @since 1.1
  */
@@ -34,35 +36,56 @@ public class JaCoCoToGoBatchMojo extends AbstractMojo {
 
     private static final String DEFAULT_OUTPUT_FILE_PREFIX = "jacoco";
     private static final String DEFAULT_OUTPUT_FILE_SUFFIX = ".exec";
-    @Parameter
-    private List<FetchOrder> fetchOrders;
+    /**
+     * a {@link java.util.List} of {@link org.helmetsrequired.jacocotogo.Source}
+     * from which JaCoCo execution data should be fetched.
+     */
+    @Parameter(required = true)
+    private List<Source> sources;
+    
+    /**
+     * The output directory to use as a default.  Can be overridden by specifying
+     * the source.outputFile and mergeFile parameters.
+     */
     @Parameter(defaultValue = "${project.build.directory}/jacocotogo")
     private File outputDir;
+    /**
+     * Whether the build should be failed if JaCoCo execution data can not be fetched
+     */
     @Parameter(defaultValue = "false")
     private boolean failOnError;
+    /**
+     * Whether to generate a merged file from the individually collected JaCoCo execution data.
+     */
     @Parameter(defaultValue = "false")
     private boolean merge;
+    
+    /**
+     * The file where merged JaCoCo execution data should be written.
+     */
     @Parameter(defaultValue = "${project.build.directory}/jacocotogo/merged.exec")
     private File mergeFile;  
 
+    /** {@inheritDoc} */
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if (fetchOrders == null || fetchOrders.isEmpty()) {
-            handleError(new IllegalArgumentException("No fetchOrders specified."));
+        if (sources == null || sources.isEmpty()) {
+            handleError(new IllegalArgumentException("No sources specified."));
             return;
         }
-        for (int i = 0; i < fetchOrders.size(); i++) {
+        for (int i = 0; i < sources.size(); i++) {
             try {
-                FetchOrder fetchOrder = fetchOrders.get(i);
-                if (fetchOrder.getOutputFile() == null) {
+                Source source = sources.get(i);
+                if (source.getOutputFile() == null) {
                     File outputFile = new File(outputDir, DEFAULT_OUTPUT_FILE_PREFIX + (i + 1) + DEFAULT_OUTPUT_FILE_SUFFIX);
-                    fetchOrder.setOutputFile(outputFile);
+                    source.setOutputFile(outputFile);
                 }
-                fetchOrder.validate();
-                getLog().debug(fetchOrder.toString());
-                if (fetchOrder.getFetchType() == FetchType.JMX) {
-                    JaCoCoToGo.fetchJaCoCoDataOverJmx(fetchOrder.getServiceURL(), fetchOrder.getUsername(), fetchOrder.getPassword(), fetchOrder.getOutputFile(), fetchOrder.isResetAfterFetch());
-                } else if (fetchOrder.getFetchType() == FetchType.TCP) {
-                    JaCoCoToGo.fetchJaCoCoDataOverTcp(fetchOrder.getHostname(), fetchOrder.getPort(), fetchOrder.getOutputFile(), fetchOrder.isResetAfterFetch());
+                source.validate();
+                getLog().debug(source.toString());
+                if (source.getSourceType() == SourceType.JMX) {
+                    JaCoCoToGo.fetchJaCoCoDataOverJmx(source.getServiceURL(), source.getUsername(), source.getPassword(), source.getOutputFile(), source.isResetAfterFetch());
+                } else if (source.getSourceType() == SourceType.TCP) {
+                    JaCoCoToGo.fetchJaCoCoDataOverTcp(source.getHostname(), source.getPort(), source.getOutputFile(), source.isResetAfterFetch());
                 }
             } catch (JaCoCoToGoValidationException ex) {
                 handleError(ex);
@@ -73,9 +96,9 @@ public class JaCoCoToGoBatchMojo extends AbstractMojo {
         if (merge) {
             try {
                 List<File> filesToMerge = new ArrayList<File>();
-                for (FetchOrder fetchOrder : fetchOrders) {
-                    if (fetchOrder.getOutputFile().canWrite()) {
-                        filesToMerge.add(fetchOrder.getOutputFile());
+                for (Source source : sources) {
+                    if (source.getOutputFile().canWrite()) {
+                        filesToMerge.add(source.getOutputFile());
                     }
                 }
                 JaCoCoToGo.mergeJaCoCoData(filesToMerge, mergeFile);

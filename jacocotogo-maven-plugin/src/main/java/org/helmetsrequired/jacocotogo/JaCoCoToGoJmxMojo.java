@@ -26,7 +26,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Plugin to allow fetching jacoco data from remote servers where
+ * Retrieves jacoco data from remote servers where
  *  the 'org.jacoco:type=Runtime MBean' is exposed via JMX
  *
  * @author Matthew C. Jenkins
