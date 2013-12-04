@@ -323,6 +323,7 @@ public class JaCoCoToGo {
         ExecFileLoader execFileLoader = new ExecFileLoader();
         for (File inputFile : inputFiles) {
             try {
+                logger.debug("Loading data from input file: '" + inputFile.getAbsolutePath() + "'");
                 execFileLoader.load(inputFile);
             } catch (IOException ex) {
                 throw new JaCoCoToGoException("Error loading data from file: '" + inputFile.getAbsolutePath() + "'");
@@ -330,6 +331,7 @@ public class JaCoCoToGo {
         }
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
+        logger.info("Writing merged data to '" + mergeFile.getAbsolutePath() + "'");
         ExecutionDataWriter executionDataWriter;
         try {
             fos = new FileOutputStream(mergeFile);
