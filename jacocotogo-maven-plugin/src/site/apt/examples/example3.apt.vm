@@ -62,7 +62,7 @@ Additionally, one of the following options is required:
                             <merge>true</merge>
 
                             <!-- the path specified below is the default location and may be omitted -->
-                            <mergeFile>${project.build.directory}/jacocotogo/merged.exec</mergeFile>
+                            <mergeFile>\${project.build.directory}/jacocotogo/merged.exec</mergeFile>
 
                             <!-- end global parameters -->
 
@@ -85,9 +85,9 @@ Additionally, one of the following options is required:
                                     <port>12345</port>
 
                                     <!-- optional specification of where JaCoCo execution data will be written.
-                                        Defaults to '${project.build.directory}/jacocotogo/jacoco[n].exec' where
+                                        Defaults to '\${project.build.directory}/jacocotogo/jacoco[n].exec' where
                                         [n] is an integer representing the index of the 'source' -->
-                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>
+                                    <outputFile>\${project.build.directory}/jacocotogo/myserver_jacoco.exec</outputFile>
 
                                     <!-- optional parameter specifying whether JaCoCo coverage statistics should be
                                         reset after data is fetched.  Defaults to true -->
@@ -99,7 +99,7 @@ Additionally, one of the following options is required:
                                 <!-- this source is identical to above, but specified using serviceURL -->
                                 <source>                                    
                                     <serviceURL>tcp://myserver.mydomain.com:12345</serviceURL>                                    
-                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>
+                                    <outputFile>\${project.build.directory}/jacocotogo/myserver_jacoco.exec</outputFile>
                                     <resetAfterFetch>true</resetAfterFetch>
                                 </source>
 
@@ -108,7 +108,7 @@ Additionally, one of the following options is required:
                                     <type>jmx</type>                                    
                                     <hostname>myserver.mydomain.com</hostname>                                    
                                     <port>12345</port>                                    
-                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>                                    
+                                    <outputFile>\${project.build.directory}/jacocotogo/myserver_jacoco.exec</outputFile>                                    
                                     <resetAfterFetch>false</resetAfterFetch>
 
                                     <!-- username to use to authenticate with JMX server.  Only required
@@ -124,7 +124,7 @@ Additionally, one of the following options is required:
                                 <!-- this source is identical to above, but specified using serviceURL -->
                                 <source>
                                     <serviceURL>service:jmx:rmi:///jndi/rmi://myserver.mydomain.com:12345/jmxrmi</serviceURL>
-                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>                                    
+                                    <outputFile>\${project.build.directory}/jacocotogo/myserver_jacoco.exec</outputFile>                                    
                                     <resetAfterFetch>false</resetAfterFetch>
                                     <username>myuser</username>                                    
                                     <password>mypassword</password>
