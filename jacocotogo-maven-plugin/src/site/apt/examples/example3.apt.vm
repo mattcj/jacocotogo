@@ -1,0 +1,143 @@
+    ------
+    Example - Batch Actions
+    ------
+    Author
+    ------
+    YYYY-MM-DD
+    ------    
+
+Example - Batch Actions
+
+    This example illustrates the step required to use the jacocotogo maven plugin to retrieve coverage information from
+multiple sources, and optionally, merge the data into a single file.
+
+* JaCoCo Java Agent Configuration
+
+    The JVM which you wish to obtain coverage metrics from must be instrumented at runtime via the JaCoCo Java Agent.
+Additionally, one of the following options is required:
+
+  [[1]] The <output> option must be set to <tcpserver> to expose expose the JaCoCo agent via TCP.
+
++-------------------------------------------------------------------------------
+    -javaagent:[yourpath/]jacocoagent.jar=output=tcpserver,address=*,port=6300
++-------------------------------------------------------------------------------
+
+  [[2]] The <jmx> option must be enabled to expose the JaCoCo MBean via JMX.
+
++-------------------------------------------------------------------------------
+    -javaagent:[yourpath/]jacocoagent.jar=jmx=true
++------------------------------------------------------------------------------- 
+
+    Further Instructions for configuring the JaCoCo java agent are available at: {{http://www.eclemma.org/jacoco/trunk/doc/agent.html}}.
+
+* Plugin Configuration
+
+    To retrieve coverage metrics from multiple remote JVMs after integration tests have completed:
+
++-------------------------------------------------------------------------------
+...
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>get_integration_test_coverage</id>
+                        <phase>post-integration-test</phase>                        
+                        <goals>
+                            <goal>batch</goal>
+                        </goals>
+                        <configuration>
+
+                            <!-- global parameters, apply to all sources -->
+
+                            <!-- will not fail the build if data can not be retrieved from server(s).
+                                This parameter is optional and defaults to 'false'. -->
+                            <failOnError>false</failOnError>
+                           
+                            <!-- create a merged file with data from all sources.
+                                This parameter is optional and defaults to 'false'. -->
+                            <merge>true</merge>
+
+                            <!-- the path specified below is the default location and may be omitted -->
+                            <mergeFile>${project.build.directory}/jacocotogo/merged.exec</mergeFile>
+
+                            <!-- end global parameters -->
+
+                            <!-- a list of locations from which JaCoCo execution data should be retrieved -->
+                            <sources>
+
+                                <!-- this source will fetch via TCP. -->
+                                <source>
+
+                                    <!-- tcp or jmx to specify how data should be retrieved.
+                                        Not required when 'serviceURL' is set....  See example below. -->
+                                    <type>tcp</type>
+
+                                    <!-- the hostname where the remote JVM is located.
+                                        Not required when 'serviceURL' is set.... See example below.  -->
+                                    <hostname>myserver.mydomain.com</hostname>
+
+                                    <!-- port from which JaCoCo execution data can be retrieved.  Either via
+                                        tcp or via jmx -->
+                                    <port>12345</port>
+
+                                    <!-- optional specification of where JaCoCo execution data will be written.
+                                        Defaults to '${project.build.directory}/jacocotogo/jacoco[n].exec' where
+                                        [n] is an integer representing the index of the 'source' -->
+                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>
+
+                                    <!-- optional parameter specifying whether JaCoCo coverage statistics should be
+                                        reset after data is fetched.  Defaults to true -->
+                                    <resetAfterFetch>true</resetAfterFetch>
+
+                                </source>
+
+
+                                <!-- this source is identical to above, but specified using serviceURL -->
+                                <source>                                    
+                                    <serviceURL>tcp://myserver.mydomain.com:12345</serviceURL>                                    
+                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>
+                                    <resetAfterFetch>true</resetAfterFetch>
+                                </source>
+
+                                <!-- this source will fetch via JMX -->                                
+                                <source>                                    
+                                    <type>jmx</type>                                    
+                                    <hostname>myserver.mydomain.com</hostname>                                    
+                                    <port>12345</port>                                    
+                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>                                    
+                                    <resetAfterFetch>false</resetAfterFetch>
+
+                                    <!-- username to use to authenticate with JMX server.  Only required
+                                        if JMX authentication is enabled. -->
+                                    <username>myuser</username>
+
+                                    <!-- password to use to authenticate with JMX server.  Only required
+                                        if JMX authentication is enabled. -->
+                                    <password>mypassword</password>
+
+                                </source>
+
+                                <!-- this source is identical to above, but specified using serviceURL -->
+                                <source>
+                                    <serviceURL>service:jmx:rmi:///jndi/rmi://myserver.mydomain.com:12345/jmxrmi</serviceURL>
+                                    <outputFile>${project.build.dir}/jacocotogo/myserver_jacoco.exec</outputFile>                                    
+                                    <resetAfterFetch>false</resetAfterFetch>
+                                    <username>myuser</username>                                    
+                                    <password>mypassword</password>
+                                </source>
+
+                            </sources>                            
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            ...
+        </plugins>
+        ...
+    </build>
+    ...
++-------------------------------------------------------------------------------

@@ -84,74 +84,167 @@ public class Source {
      */
     private boolean resetAfterFetch = true;
     
+    /**
+     * 
+     * @param type a {@link java.lang.String} representing the type of source.  Should be either 'tcp' or 'jmx'.
+     *  Not required when 'serviceURL' is set.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * 
+     * @return a {@link java.lang.String} representing the type of source.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * 
+     * @return a {@link org.helmetsrequired.jacocotogo.SourceType} representing the type of source.
+     *  This is set during validation based on 'serviceURL' if provided, or 'type' if 'serviceURL' is
+     *  not supplied.
+     */
     public SourceType getSourceType() {
         return sourceType;
     }        
 
+    /**
+     * 
+     * @return a {@link java.lang.String} specifying the hostname where the remote JVM 
+     *  is located.
+     */
     public String getHostname() {
         return hostname;
     }
 
+    /**
+     * 
+     * @param hostname a {@link java.lang.String} specifying the hostname where the remote JVM 
+     *  is located.  Only required if 'serviceURL' is not set.
+     */
     public void setHostname(String hostname) {
         this.hostname = hostname;
     }
 
+    /**
+     * 
+     * @return the port number where JaCoCo data can be accessed on the remote server, either
+     *  via TCP or JMX.  Only required if 'serviceURL' is not set.
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * 
+     * @param port the port number where JaCoCo data can be accessed on the remote server, either
+     *  via TCP or JMX.  Only required if 'serviceURL' is not set.
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * 
+     * @param outputFile optional {@link java.io.File} specifying where JaCoCo execution data
+     *  will be written.  If omitted, defaults to '${project.build.directory}/jacocotogo/jacoco[n].exec'
+     *  where [n] is a index which corresponds to the order of the source.
+     */
     public void setOutputFile(File outputFile) {
         this.outputFile = outputFile;
     }
 
+    /**
+     * 
+     * @return {@link java.io.File} specifying where JaCoCo execution data
+     *  will be written.
+     */
     public File getOutputFile() {
         return outputFile;
     }
 
+    /**
+     * 
+     * @return the {@link java.lang.String} representing the username for authentication
+     *  to JMX server.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * 
+     * @param username the {@link java.lang.String} representing the username for authentication
+     *  to JMX server.  Only necessary if authentication is enabled on the JMX location.
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * 
+     * @return the {@link java.lang.String} representing the password for authentication
+     *  to JMX server.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * 
+     * @param password the {@link java.lang.String} representing the password for authentication
+     *  to JMX server.  Only necessary if authentication is enabled on the JMX location.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * 
+     * @return a {@link java.lang.String} with the serviceURL representing where
+     *  the jacoco data can be retrieved.
+     * 
+     *  If the serviceURL is specified it takes precedence over the type, hostname, and port parameters.
+     */
     public String getServiceURL() {
         return serviceURL;
     }
 
+    /**
+     * 
+     * @param serviceURL a {@link java.lang.String} of the serviceURL representing where
+     *  the jacoco data can be retrieved.  For JMX access see {@link javax.management.remote.JMXServiceURL}
+     *  for format details.  For TCP access the serviceURL should take the
+     *  format: 'tcp://myhost.mydomain.com:port'
+     * 
+     *  If the serviceURL is specified it takes precedence over the 'type', 'hostname', and 'port' parameters.
+     */
     public void setServiceURL(String serviceURL) {
         this.serviceURL = serviceURL;
     }
 
+    /**
+     * 
+     * @return whether the coverage statistics will be reset after fetching the jacoco data.
+     */
     public boolean isResetAfterFetch() {
         return resetAfterFetch;
     }
 
+    /**
+     * 
+     * @param resetAfterFetch whether the coverage statistics should be reset after fetching the jacoco data.
+     */
     public void setResetAfterFetch(boolean resetAfterFetch) {
         this.resetAfterFetch = resetAfterFetch;
     }
 
+    /**
+     * Validates that valid input parameters are specified.
+     */
     public void validate() {
         if (serviceURL == null) {
             // type is required
