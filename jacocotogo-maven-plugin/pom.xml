@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.helmetsrequired</groupId>
     <artifactId>jacocotogo-maven-plugin</artifactId>    
-    <version>1.1</version>    
+    <version>1.2-SNAPSHOT</version>    
     <packaging>maven-plugin</packaging>
     <name>jacocotogo-maven-plugin</name>
     <description>A maven plugin to fetch JaCoCo data from remote servers</description>
