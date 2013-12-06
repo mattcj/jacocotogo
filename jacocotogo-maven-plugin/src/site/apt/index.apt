@@ -36,3 +36,5 @@ JaCoCoToGo Maven Plugin
   * {{{./examples/example1.html}Access via JMX}}
 
   * {{{./examples/example2.html}Access via TCP}}
+
+  * {{{./examples/example3.html}Batch actions}}

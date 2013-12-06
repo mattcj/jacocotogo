@@ -26,10 +26,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Plugin to allow fetching jacoco data from remote servers where
+ * Retrieves jacoco data from remote servers where
  *  the 'org.jacoco:type=Runtime MBean' is exposed via JMX
  *
  * @author Matthew C. Jenkins
+ * 
+ * @since 1.0
  */
 @Mojo(name = "jmx")
 public class JaCoCoToGoJmxMojo extends AbstractMojo {
@@ -67,8 +69,9 @@ public class JaCoCoToGoJmxMojo extends AbstractMojo {
     /** {@inheritDoc} */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {                                
-        File file = new File(outputFile);
-        File directory = file.getParentFile();
+        File file = new File(outputFile);        
+        File directory = file.getAbsoluteFile().getParentFile();        
+        
         if (!directory.exists()) {
             getLog().debug("creating directory: " + directory.getAbsolutePath());
             directory.mkdirs();

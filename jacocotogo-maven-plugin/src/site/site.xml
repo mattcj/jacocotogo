@@ -7,6 +7,7 @@
                 <item name="help" href="./help-mojo.html" />
                 <item name="jmx" href="./jmx-mojo.html" />
                 <item name="tcp" href="./tcp-mojo.html"/>
+                <item name="batch" href="./batch-mojo.html"/>
             </item>
             <!--<item name="FAQ" href="faq.html"/>-->
             <item name="Project Info" href="./project-info.html" />
@@ -16,6 +17,11 @@
         <menu name="Examples">
             <item name="Access via JMX" href="examples/example1.html"/>
             <item name="Access via TCP" href="examples/example2.html"/>
+            <item name="Batch actions" href="examples/example3.html"/>
+        </menu>
+        
+        <menu name="Previous Versions">
+            <item name="1.0" href="archive/1.0/index.html"/>
         </menu>
     </body>
 </project>
