@@ -36,10 +36,10 @@ import javax.management.ReflectionException;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import org.jacoco.core.data.ExecFileLoader;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.tools.ExecFileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,7 +242,7 @@ public class JaCoCoToGo {
 
     /**
      *
-     * @param hostname the hostname where the remote jvm is running.
+     * @param address the address where the remote jvm is running.
      * @param port the port where the JaCoCo Java Agent TCP Server is listening.
      * @param resetAfterFetch whether JaCoCo coverage data should be reset after
      * fetch

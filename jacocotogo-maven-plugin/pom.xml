@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.helmetsrequired</groupId>
     <artifactId>jacocotogo-maven-plugin</artifactId>    
-    <version>1.1</version>    
+    <version>1.2-SNAPSHOT</version>    
     <packaging>maven-plugin</packaging>
     <name>jacocotogo-maven-plugin</name>
     <description>A maven plugin to fetch JaCoCo data from remote servers</description>
@@ -77,8 +77,8 @@
         <slf4j-version>1.7.5</slf4j-version>        
         <surefire-version>2.10</surefire-version>
         <failsafe-version>2.10</failsafe-version>        
-        <jacoco-version>0.6.3.201306030806</jacoco-version>
-        <maven-plugin-plugin-version>3.2</maven-plugin-plugin-version>
+        <jacoco-version>0.7.5.201505241946</jacoco-version>
+        <maven-plugin-plugin-version>3.4</maven-plugin-plugin-version>
         <maven-javadoc-plugin-version>2.9.1</maven-javadoc-plugin-version>
     </properties>
     
