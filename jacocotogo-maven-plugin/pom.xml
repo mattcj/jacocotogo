@@ -252,13 +252,13 @@
                     <uniqueVersion>false</uniqueVersion>
                     <id>local-nexus</id>
                     <name>Internal Nexus Release Repository</name>
-                    <url>http://nexus.home.helmetsrequired.org/content/repositories/releases</url>                    
+                    <url>http://nexus.helmetsrequired.org/content/repositories/releases</url>                    
                 </repository>
                 <snapshotRepository>
                     <uniqueVersion>true</uniqueVersion>
                     <id>local-nexus</id>
                     <name>Internal Nexus Snapshot Repository</name>
-                    <url>http://nexus.home.helmetsrequired.org/content/repositories/snapshots</url>                    
+                    <url>http://nexus.helmetsrequired.org/content/repositories/snapshots</url>                    
                 </snapshotRepository>
             </distributionManagement>
         </profile>
